@@ -11,6 +11,7 @@ setup(
     maintainer='Tim Tröndle',
     maintainer_email='tt397@cam.ac.uk',
     url='https://www.github.com/timtroendle/eecisc',
+    license='MIT',
     packages=find_packages(exclude=['tests*']),
     include_package_data=True,
     install_requires=['pysmb', 'geopandas'],
