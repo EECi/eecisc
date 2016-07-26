@@ -6,12 +6,16 @@ You can use this package to read files from the smb share on EECISC. For example
 
     import eecisc
     import pandas as pd
+    import geopandas as gpd
 
     # read pure file
     csv_file = eecisc.read_file('/remote-csv-file.csv')
 
     # read into data frame
     df = pd.read_csv(csv_file)
+
+    # read shape file into geopandas data frame
+    gdf = eecisc.read_shapefile('/remote-shape-file')
 
 ## Developer Guide
 

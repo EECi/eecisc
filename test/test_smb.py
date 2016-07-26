@@ -1,11 +1,17 @@
 from io import BytesIO
+from pathlib import Path
+import tempfile
 
 import pytest
 import pandas as pd
+import geopandas as gpd
+from shapely.geometry.polygon import Polygon
 from smb.SMBConnection import SMBConnection
 
 import eecisc
 from eecisc import smb
+
+SHAPE_FILE_SUFFIXES = ['.shp', '.shx', '.dbf']
 
 
 @pytest.fixture(scope='module')
@@ -57,8 +63,45 @@ def remote_test_csv(connection):
         connection.close()
 
 
+@pytest.yield_fixture
+def remote_shape_file(connection):
+    """Path to a shape file on the remote.
+
+    Files are uploaded before the test and deleted afterwards.
+    """
+    path = '/test-shape-file'
+    p = Polygon([(0, 0), (1, 0), (1, 1)])
+    shape_file = gpd.GeoDataFrame(geometry=[p], data={'a': [100]})
+    try:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp_file = Path(tmpdir) / 'test-shape-file'
+            shape_file.to_file(tmp_file.with_suffix('.shp').as_posix())
+            assert connection.connect(eecisc.IP_ADDRESS, smb.SMB_PORT)
+            for suffix in SHAPE_FILE_SUFFIXES:
+                with tmp_file.with_suffix(suffix).open('rb') as open_file:
+                    connection.storeFile(smb.NAME_OF_SMB_SHARE, path + suffix, open_file, timeout=5)
+        yield path
+        for suffix in SHAPE_FILE_SUFFIXES:
+            connection.deleteFiles(smb.NAME_OF_SMB_SHARE, path + suffix, timeout=5)
+    finally:
+        connection.close()
+
+
 def test_csv_retrieval(credentials, remote_test_csv):
-    csv = pd.read_csv(eecisc.read_file('/test.csv'))
+    csv = pd.read_csv(eecisc.read_file(remote_test_csv))
     assert type(csv) == pd.DataFrame
     assert set(csv.columns) == set(['A', 'B', 'C'])
     assert csv.index.size == 2
+
+
+def test_shp_retrieval(credentials, remote_shape_file):
+    data = eecisc.read_shapefile(remote_shape_file)
+    assert type(data) == gpd.GeoDataFrame
+    assert data.index.size == 1
+    assert data.iloc[0].a == 100
+
+
+def test_shp_retrieval_with_suffix(credentials, remote_shape_file):
+    remote_shape_file = Path(remote_shape_file)
+    assert remote_shape_file.suffix == ''
+    eecisc.read_shapefile(remote_shape_file.with_suffix('.shp'))

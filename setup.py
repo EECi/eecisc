@@ -13,13 +13,13 @@ setup(
     url='https://www.github.com/timtroendle/eecisc',
     packages=find_packages(exclude=['tests*']),
     include_package_data=True,
-    install_requires=['pysmb'],
+    install_requires=['pysmb', 'geopandas'],
     classifiers=[
         'Environment :: Console',
         'Intended Audience :: Science/Research',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Scientific/Engineering'
     ]
 )
