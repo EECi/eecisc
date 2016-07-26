@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='eecisc',
-    version="0.1.0",
+    version="0.1.1.dev",
     description='Tools for accessing eecisc.eng.cam.ac.uk.',
     maintainer='Tim Tröndle',
     maintainer_email='tt397@cam.ac.uk',
