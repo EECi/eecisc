@@ -2,11 +2,9 @@
 
 from setuptools import setup, find_packages
 
-exec(open('eecisc/__init__.py').read())
-
 setup(
     name='eecisc',
-    version=__version__,
+    version="0.1.0.dev",
     description='Tools for accessing eecisc.eng.cam.ac.uk.',
     maintainer='Tim Tröndle',
     maintainer_email='tt397@cam.ac.uk',

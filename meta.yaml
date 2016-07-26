@@ -1,0 +1,33 @@
+package:
+  name: eecisc
+  version: "0.1.0"
+
+source:
+  git_url: https://github.com/timtroendle/eecisc
+  git_rev: "0.1.0"
+
+build:
+  noarch_python: True
+  number: 0
+  script: python setup.py install
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - pysmb >=1.1.18
+    - geopandas >=0.2
+
+  run:
+    - python
+    - pysmb >=1.1.18
+    - geopandas >=0.2
+
+test:
+  imports:
+    - eecisc
+
+about:
+  home: https://github.com/timtroendle/eecisc
+  license: MIT License
+  summary: "Tools for accessing eecisc.eng.cam.ac.uk."
