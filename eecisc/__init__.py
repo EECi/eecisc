@@ -1,4 +1,4 @@
-__version__ = '0.1.0.dev'
+from .eecisc import COMPUTER_NAME, IP_ADDRESS
+from .smb import read_file
 
-IP_ADDRESS = '129.169.70.197'
-COMPUTER_NAME = 'eecisc'
+__version__ = '0.1.0.dev'
